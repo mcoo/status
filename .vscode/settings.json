@@ -1,0 +1,62 @@
+{
+  "i18n-ally.localesPaths": [
+    "locales"
+  ],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sourceLanguage": "zh-CN",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "files.associations": {
+    "*.css": "css"
+  },
+  "editor.formatOnSave": false,
+  "css.lint.unknownAtRules": "ignore",
+  // 开启 eslint
+  "eslint.enable": true,
+  // 开启 prettier
+  "prettier.enable": true,
+  "editor.linkedEditing": true,
+  // 开启 eslint 作为格式化工具
+  "eslint.format.enable": true,
+  // 默认格式化选择 prettier,
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    ".env": ".env.*",
+    "index.html": "LICENSE,.gitignore,README*.md",
+    ".eslintrc.json": ".eslint*,.prettier*,.editor*",
+    "vite.config.ts": "package.json,uno.config.ts,tsconfig.json,*.toml,.npmrc,.nvmrc,renovate.json,CHANGELOG.md,.dockerignore,dockerfile,vite.config.*.ts"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "bodil.prettier-toml"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[plaintext]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  }
+}

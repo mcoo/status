@@ -1,0 +1,11 @@
+dist
+.nitro
+.output
+env.d.ts
+node_modules
+.eslintcache
+components.d.ts
+type-router.d.ts
+auto-imports.d.ts
+.eslintrc-auto-import.json
+vite.config.ts.timestamp*
