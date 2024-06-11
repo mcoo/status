@@ -1,15 +1,18 @@
 <template>
 	<li class="flex items-center py-5 space-x-2">
-		<i
-			v-if="data.opts['国家']"
-			class="flex-shrink-1"
-			:class="'fi fi-' + data.opts['国家']"
-		></i>
 		<div class="flex grow-1 flex-col overflow-x-hidden space-y-0.5">
 			<div class="flex justify-between">
-				<div class="text-[0.8rem]">
-					{{ data?.name }}
+				<div class="flex items-center gap-1">
+					<i
+						v-if="data.opts['国家']"
+						class="flex-shrink-1"
+						:class="'fi fi-' + data.opts['国家']"
+					></i>
+					<div class="text-[0.8rem]">
+						{{ data?.name }}
+					</div>
 				</div>
+
 				<n-tag
 					round
 					class="bg-transparent"
@@ -29,9 +32,12 @@
 					{{ status[data?.status] }}
 				</n-tag>
 			</div>
+			<div>
+				<v-chart class="h-20" :option="chartOpt" autoresize></v-chart>
+			</div>
 			<div class="w-full flex space-x-0.2 md:space-x-0.5">
 				<n-tooltip
-					v-for="(item, index) in data?.daily"
+					v-for="(item, index) in daily"
 					:key="index"
 					placement="top"
 					display-directive="show"
@@ -60,7 +66,13 @@
 				</n-tooltip>
 			</div>
 			<div class="flex justify-between text-[0.6rem] text-gray-400 font-thin">
-				<div>今日</div>
+				<div>
+					{{
+						rtl
+							? data?.daily[data?.daily.length - 1].date.format('YYYY-MM-DD')
+							: '今日'
+					}}
+				</div>
 				<div>
 					{{
 						data?.total?.times
@@ -69,7 +81,11 @@
 					}}
 				</div>
 				<div>
-					{{ data?.daily[data?.daily.length - 1].date.format('YYYY-MM-DD') }}
+					{{
+						rtl
+							? '今日'
+							: data?.daily[data?.daily.length - 1].date.format('YYYY-MM-DD')
+					}}
 				</div>
 			</div>
 			<div class="mt-0 flex flex-wrap gap-0.5">
@@ -88,15 +104,128 @@
 	</li>
 </template>
 <script setup lang="ts">
+import VChart, { THEME_KEY } from 'vue-echarts'
+import { use } from 'echarts/core'
+import type { EChartsOption } from 'echarts'
+import { LineChart } from 'echarts/charts'
+import { isDark } from 'vue-dark-switch'
 import { _Result } from '../api/uptime'
+import { SVGRenderer } from 'echarts/renderers'
+import {
+	GridComponent,
+	TooltipComponent,
+	VisualMapComponent,
+} from 'echarts/components'
 interface Props {
 	data: _Result
+	rtl?: boolean
 }
+use([
+	LineChart,
+	SVGRenderer,
+	GridComponent,
+	TooltipComponent,
+	VisualMapComponent,
+])
+const props = defineProps<Props>()
 const status: { [key: string]: string } = {
 	ok: '正常',
 	down: '无法访问',
 	unknow: '未知',
 }
+const daily = computed(() => {
+	if (!props.rtl) {
+		return props.data.daily
+	} else {
+		let tmp = props.data.daily
+		return tmp.reverse()
+	}
+})
+provide(
+	THEME_KEY,
+	computed(() => (isDark.value ? 'dark' : '')),
+)
+const chartOpt = computed<EChartsOption>(() => {
+	return {
+		backgroundColor: 'transparent',
+		xAxis: {
+			type: 'category',
+			data: Array.from(props.data.response_times, (v) => {
+				return dayjs.unix(v.datetime).format('MM-DD hh:mm')
+			}),
 
-defineProps<Props>()
+			axisLabel: {
+				fontSize: 8,
+			},
+		},
+		yAxis: {
+			type: 'value',
+			splitNumber: 3,
+			axisLabel: {
+				fontSize: 8,
+			},
+		},
+		grid: {
+			left: '0%',
+			right: '0%',
+			bottom: '0%',
+			top: '10%',
+			containLabel: true,
+		},
+		tooltip: {
+			axisPointer: {
+				type: 'cross',
+			},
+			showContent: false,
+		},
+		series: [
+			{
+				data: Array.from(props.data.response_times, (v) => {
+					return v.value
+				}),
+				smooth: true,
+				name: 'timeout',
+				type: 'line',
+				symbol: 'none',
+			},
+		],
+		visualMap: {
+			show: false,
+			pieces: [
+				{
+					gt: 0,
+					lte: 50,
+					color: 'rgb(74, 222, 128)',
+				},
+				{
+					gt: 50,
+					lte: 100,
+					color: 'rgb(74, 222, 128)',
+				},
+				{
+					gt: 100,
+					lte: 150,
+					color: 'rgb(100, 222, 128)',
+				},
+				{
+					gt: 150,
+					lte: 200,
+					color: 'rgb(74, 222, 128)',
+				},
+				{
+					gt: 200,
+					lte: 300,
+					color: 'rgb(255, 204, 51)',
+				},
+				{
+					gt: 300,
+					color: 'rgb(255, 0, 0)',
+				},
+			],
+			outOfRange: {
+				color: '#999',
+			},
+		},
+	}
+})
 </script>

@@ -4,7 +4,7 @@ export interface IInfo {
 	name: string
 	avatar: string
 	desc: string
-	footer: string
+	rtl: boolean
 }
 
 export const infoRequest = () => {

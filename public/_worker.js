@@ -38,15 +38,9 @@ export default {
 				addHeaders(response)
 				return response
 			}
-			response = new Response(
-				JSON.stringify({
-					name: info.name,
-					avatar: info.avatar,
-					desc: info.desc,
-					footer: info.footer,
-				}),
-				{ headers: { 'Content-Type': 'application/json' } },
-			)
+			response = new Response(JSON.stringify(info), {
+				headers: { 'Content-Type': 'application/json' },
+			})
 			addHeaders(response)
 			return response
 		}

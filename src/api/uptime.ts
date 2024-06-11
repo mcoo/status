@@ -4,14 +4,18 @@ export interface _Result {
 	name: string
 	url: string
 	average: string
-	daily: {
+	daily: Array<{
 		date: any
 		uptime: string
 		down: {
 			times: number
 			duration: number
 		}
-	}[]
+	}>
+	response_times: Array<{
+		datetime: number
+		value: number
+	}>
 	total: {
 		times: number
 		duration: number
@@ -19,7 +23,7 @@ export interface _Result {
 	status: string
 	opts: { [key: string]: string }
 }
-export type _Resp = {
+export interface _Resp {
 	stat: string
 	pagination: {
 		offset: number
@@ -41,6 +45,10 @@ export type _Resp = {
 		timeout: number
 		status: number
 		create_datetime: number
+		response_times: Array<{
+			datetime: number
+			value: number
+		}>
 		logs: Array<{
 			id: number
 			type: number
@@ -75,6 +83,7 @@ export const uptimeRequest = (apikey: string, days: number) => {
 		format: 'json',
 		logs: 1,
 		log_types: '1-2',
+		response_times: 1,
 		logs_start_date: start,
 		logs_end_date: end,
 		custom_uptime_ranges: ranges.join('-'),
@@ -130,6 +139,7 @@ export const uptimeRequest = (apikey: string, days: number) => {
 						total: total,
 						status: 'unknow',
 						opts: {},
+						response_times: monitor.response_times,
 					}
 
 					let match

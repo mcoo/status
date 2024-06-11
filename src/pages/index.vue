@@ -104,7 +104,7 @@
 				>
 					<div class="w-full divide-y divide-dashed">
 						<ul v-for="(item, j) in topItem" :key="j" class="w-full">
-							<StatusItem :data="item"></StatusItem>
+							<StatusItem :rtl="info_data?.rtl" :data="item"></StatusItem>
 						</ul>
 					</div>
 				</div>
