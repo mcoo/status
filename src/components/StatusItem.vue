@@ -147,7 +147,7 @@ provide(
 )
 const chartOpt = computed<EChartsOption>(() => {
 	let xAxis = Array.from(props.data.response_times, (v) => {
-		return dayjs.unix(v.datetime).format('MM-DD hh:mm')
+		return dayjs.unix(v.datetime).format('MM-DD HH:mm')
 	})
 	let sData = Array.from(props.data.response_times, (v) => {
 		return v.value
