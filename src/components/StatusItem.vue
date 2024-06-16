@@ -146,13 +146,17 @@ provide(
 	computed(() => (isDark.value ? 'dark' : '')),
 )
 const chartOpt = computed<EChartsOption>(() => {
+	let xAxis = Array.from(props.data.response_times, (v) => {
+		return dayjs.unix(v.datetime).format('MM-DD hh:mm')
+	})
+	let sData = Array.from(props.data.response_times, (v) => {
+		return v.value
+	})
 	return {
 		backgroundColor: 'transparent',
 		xAxis: {
 			type: 'category',
-			data: Array.from(props.data.response_times, (v) => {
-				return dayjs.unix(v.datetime).format('MM-DD hh:mm')
-			}),
+			data: props.rtl ? xAxis.reverse() : xAxis,
 
 			axisLabel: {
 				fontSize: 8,
@@ -180,9 +184,7 @@ const chartOpt = computed<EChartsOption>(() => {
 		},
 		series: [
 			{
-				data: Array.from(props.data.response_times, (v) => {
-					return v.value
-				}),
+				data: props.rtl ? sData.reverse() : sData,
 				smooth: true,
 				name: 'timeout',
 				type: 'line',
